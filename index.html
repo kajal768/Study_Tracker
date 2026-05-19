@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Study & Habit Tracker</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <div class="blob blob-one"></div>
+  <div class="blob blob-two"></div>
+  <div class="blob blob-three"></div>
+
+  <div class="alarm-modal" id="alarmModal">
+    <div class="alarm-box">
+      <div class="alarm-icon">🔔</div>
+      <h2 id="alarmTitle">Time to study!</h2>
+      <p id="alarmMessage">Your scheduled task is ready.</p>
+      <button class="btn" id="closeAlarmBtn">Okay, Start Now</button>
+    </div>
+  </div>
+
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-logo">📈</div>
+        <div>
+          <h2>Study Tracker</h2>
+          <span>Smart daily study planner</span>
+        </div>
+      </div>
+
+      <div class="nav">
+        <button class="nav-btn active" data-tab="dashboard"><span class="nav-icon">🏠</span>Dashboard</button>
+        <button class="nav-btn" data-tab="tasks"><span class="nav-icon">✅</span>Daily Tasks</button>
+        <button class="nav-btn" data-tab="goals"><span class="nav-icon">🎯</span>Monthly Goals</button>
+        <button class="nav-btn" data-tab="planner"><span class="nav-icon">🗓</span>Weekly Plan</button>
+        <button class="nav-btn" data-tab="schedule"><span class="nav-icon">⏰</span>Schedule Alerts</button>
+        <button class="nav-btn" data-tab="notes"><span class="nav-icon">📝</span>Notes</button>
+      </div>
+
+      <div class="mini-focus">
+        <strong>Today Rule ✨</strong>
+        <p>Task start karo, timer complete hote hi task auto complete ho jayega.</p>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="hero-panel">
+        <div class="topbar">
+          <div>
+            <div class="eyebrow">🔥 Focus mode ready</div>
+            <h1>Clear timing ke sath <span class="gradient-text">study complete</span> karo ✨</h1>
+            <p>Ab har task me start time, end time, duration, start button aur auto-complete timer rahega.</p>
+          </div>
+
+          <div class="top-actions">
+            <button class="btn light" id="themeBtn">🌙 Dark</button>
+            <button class="btn green" id="focusBtn">🎧 Focus</button>
+            <button class="btn danger" id="resetBtn">Reset</button>
+          </div>
+        </div>
+
+        <div class="quick-row">
+          <div class="quick-card"><strong>Today Theme</strong><span id="todayTheme">Loading...</span></div>
+          <div class="quick-card"><strong>Next Task</strong><span id="nextAlarmText">Checking...</span></div>
+          <div class="quick-card"><strong>Active Timer</strong><span id="activeTimerText">No task running</span></div>
+          <div class="quick-card"><strong>Rule</strong><span>Start task → timer finish → auto tick</span></div>
+        </div>
+      </div>
+
+      <section id="dashboard" class="tab-section fade-in">
+        <div class="grid stats">
+          <div class="card stat-card">
+            <div class="stat-icon">⚡</div>
+            <span>Today Completion</span>
+            <h3 id="todayPercent">0%</h3>
+          </div>
+
+          <div class="card stat-card">
+            <div class="stat-icon">✅</div>
+            <span>Completed Tasks</span>
+            <h3 id="completedCount">0</h3>
+          </div>
+
+          <div class="card stat-card">
+            <div class="stat-icon">⏳</div>
+            <span>Study Time</span>
+            <h3 id="studyTimeCount">0m</h3>
+          </div>
+
+          <div class="card stat-card">
+            <div class="stat-icon">🔥</div>
+            <span>Current Streak</span>
+            <h3 id="streakCount">0</h3>
+          </div>
+        </div>
+
+        <div class="grid content-grid">
+          <div class="card">
+            <div class="section-title">
+              <div>
+                <h2>Monthly Progress Graph</h2>
+                <small>Daily consistency score</small>
+              </div>
+              <input type="date" class="date-picker" id="datePicker" />
+            </div>
+            <canvas id="progressChart" height="120"></canvas>
+          </div>
+
+          <div class="card">
+            <div class="section-title">
+              <div>
+                <h2>Active Task Timer</h2>
+                <small>Selected task countdown</small>
+              </div>
+            </div>
+
+            <div class="pomodoro">
+              <div class="timer-ring" id="timerRing">
+                <span id="timerText">00:00</span>
+              </div>
+
+              <div>
+                <button class="btn" id="startTimerBtn">Start</button>
+                <button class="btn light" id="resetTimerBtn">Reset</button>
+
+                <div class="motivation" style="margin-top:12px;">
+                  <strong id="runningTaskTitle">No task selected</strong>
+                  <p id="quoteText">Daily Tasks me jaake kisi task ka Start button dabao.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="section-title">
+              <h2>Today Focus</h2>
+              <small>Timing wise tasks</small>
+            </div>
+            <div id="todayTasks"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="tasks" class="tab-section hidden">
+        <div class="card">
+          <div class="section-title">
+            <div>
+              <h2>Daily Task Tracker</h2>
+              <small>Start time, end time aur duration clear rahega</small>
+            </div>
+          </div>
+
+          <div class="form-grid task-form-grid">
+            <input type="text" id="taskName" placeholder="Task name e.g. DSA Practice" />
+
+            <select id="taskCategory">
+              <option value="DSA">DSA</option>
+              <option value="Entrance">Entrance</option>
+              <option value="English">English</option>
+              <option value="Job Prep">Job Prep</option>
+              <option value="Health">Health</option>
+            </select>
+
+            <input type="time" id="taskStartTime" />
+            <input type="time" id="taskEndTime" />
+
+            <input type="number" id="taskDuration" placeholder="Duration in minutes e.g. 45" min="1" />
+
+            <button class="btn" id="addTaskBtn">Add Task</button>
+          </div>
+
+          <div class="motivation" style="margin-top:14px;">
+            <strong>How completion works?</strong>
+            <p>Task ka Start button click karo. Timer finish hote hi task automatically complete/tick ho jayega. Manual Complete button bhi available rahega.</p>
+          </div>
+
+          <div class="timeline-heading">
+            <h3>Today Schedule</h3>
+            <span>Time wise clear plan</span>
+          </div>
+
+          <div id="taskList"></div>
+        </div>
+      </section>
+
+      <section id="goals" class="tab-section hidden">
+        <div class="card">
+          <div class="section-title">
+            <h2>Monthly Goals</h2>
+            <small>Set target for every month</small>
+          </div>
+
+          <div class="form-grid">
+            <input type="text" id="goalName" placeholder="Goal e.g. DSA Questions" />
+            <input type="number" id="goalTarget" placeholder="Target e.g. 60" />
+            <input type="number" id="goalDone" placeholder="Completed e.g. 12" />
+            <button class="btn" id="addGoalBtn">Add Goal</button>
+          </div>
+
+          <div class="goal-list" id="goalList" style="margin-top:18px;"></div>
+        </div>
+      </section>
+
+      <section id="planner" class="tab-section hidden">
+        <div class="card">
+          <div class="section-title">
+            <h2>Weekly Theme Plan</h2>
+            <small>One main target daily</small>
+          </div>
+
+          <div class="planner-grid">
+            <div class="day-box"><h4>Monday</h4><p>8:00 PM - 9:00 PM: DSA Arrays</p><p>9:00 PM - 9:30 PM: English</p></div>
+            <div class="day-box"><h4>Tuesday</h4><p>8:00 PM - 9:00 PM: DSA Strings</p><p>9:00 PM - 9:30 PM: Revision</p></div>
+            <div class="day-box"><h4>Wednesday</h4><p>8:00 PM - 9:00 PM: Quant</p><p>9:00 PM - 9:30 PM: Practice</p></div>
+            <div class="day-box"><h4>Thursday</h4><p>8:00 PM - 9:00 PM: Reasoning</p><p>9:00 PM - 9:30 PM: Mock</p></div>
+            <div class="day-box"><h4>Friday</h4><p>8:00 PM - 9:00 PM: Resume</p><p>9:00 PM - 9:30 PM: Interview</p></div>
+            <div class="day-box"><h4>Saturday</h4><p>8:00 PM - 9:00 PM: Mixed Revision</p><p>9:00 PM - 9:30 PM: Pending</p></div>
+            <div class="day-box"><h4>Sunday</h4><p>8:00 PM - 9:00 PM: Mock Test</p><p>9:00 PM - 9:30 PM: Planning</p></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="schedule" class="tab-section hidden">
+        <div class="card">
+          <div class="section-title">
+            <div>
+              <h2>Schedule Alerts</h2>
+              <small>Alarm reminder browser me show hoga</small>
+            </div>
+            <button class="btn green" id="enableNotifyBtn">🔔 Enable Alerts</button>
+          </div>
+
+          <div class="form-grid task-form-grid">
+            <input type="text" id="scheduleTaskName" placeholder="Task e.g. DSA Practice" />
+            <input type="time" id="scheduleStartTime" />
+            <input type="time" id="scheduleEndTime" />
+            <input type="number" id="scheduleDuration" placeholder="Duration minutes e.g. 45" min="1" />
+
+            <select id="scheduleTaskCategory">
+              <option value="DSA">DSA</option>
+              <option value="Entrance">Entrance</option>
+              <option value="English">English</option>
+              <option value="Job Prep">Job Prep</option>
+              <option value="Health">Health</option>
+            </select>
+
+            <button class="btn" id="addScheduleBtn">Add Alarm</button>
+          </div>
+
+          <div class="motivation" style="margin-top:14px;">
+            <strong>Important</strong>
+            <p>Browser alert tab open hone par best work karega. Start button se timer chalega aur finish hone par task auto complete hoga.</p>
+          </div>
+
+          <div id="scheduleList" style="margin-top:18px;"></div>
+        </div>
+      </section>
+
+      <section id="notes" class="tab-section hidden">
+        <div class="card notes">
+          <div class="section-title">
+            <h2>Daily Notes</h2>
+            <small>Save thoughts and tomorrow target</small>
+          </div>
+
+          <textarea id="notesBox" placeholder="Write what you studied today, problems faced, tomorrow target..."></textarea>
+
+          <div style="margin-top:12px;">
+            <button class="btn" id="saveNotesBtn">Save Notes</button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
